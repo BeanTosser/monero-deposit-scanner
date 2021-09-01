@@ -315,7 +315,16 @@ export default function App(){
     }
     return true;
   } 
-  const validateRestoreHeight = function(restoreHeight: string): boolean {
+  
+  /* This function will only check for valid characters!
+   *
+   * per woodser:
+   * I'd stick with complete validation of address and viewkey on every keystroke, 
+   * disabling the button and showing red if invalid
+   * and then for the date, doing pattern matching validation on every keystroke and 
+   * complete validation on focus out, showing red and disabling the button if invalid 
+   */
+   const validateRestoreHeight = function(restoreHeight: string): boolean {
     console.log("Validating restore height");
     return true;
   }
