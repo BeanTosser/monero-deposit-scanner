@@ -333,14 +333,12 @@ export default function App(){
     * This is done in order not to indicate invalid input when the user has started to enter
     * BUT NOT FINISHED ENTERING a valid restore height.
     */
-   const validateRestoreHeightPattern = function(restoreHeight: string): boolean {
+  const validateRestoreHeightPattern = function(restoreHeight: string): boolean {
     console.log("Validating restore height");
     
     // Check to see if the entered height contains non-digit characters
-    const nonDigitRegex = new RegExp('[^0-9]');
+    const nonDigitRegex = new RegExp('[^0-9]', 'g');
     const validNonDigitRegex = new RegExp('(/\|-)');
-    
-    let monthIsSingleDigit: boolean = false;
     
     let matches: RegExpMatchArray[] = [...restoreHeight.matchAll(nonDigitRegex)];
 
@@ -359,50 +357,80 @@ export default function App(){
        * The first non-digit character should either be a "/" or a "-" and should only
        * occur at element 1 (if single-digit month) or two (if double-digit month)
        */ 
+      let monthBumper = 1;
       if(validNonDigitRegex.test(matches[0][0])) {
         if(matches[0].index === 1) {
-          monthIsSingleDigit = true;
+          monthBumper = 0;
         } else if (matches[0].index === 2) {
           // Verify that the month string as a number is <= 12
-          if(parseInt(restoreHeight.slice(0,2), 10) <= 12) {
-          } else {
+          let monthAsNum = parseInt(restoreHeight.slice(0,2), 10);
+          if(monthAsNum === 0 || monthAsNum > 12) {
+            console.log("Month must be between 1 and 12")
             return false;
           }
         } else {
+          //The first delimitter is in an invalid position.
+          console.log("The first delimiter is in an invalid position");
           return false;
         }
+      } else {
+        //The first delimiter is not a valid delimiter char
+        console.log("The first delimitter is not a valid delimitter character.");
+        return false;
       }
       
       /*
-       * The first non-digit character must be valid. Check the second:
+       * The first non-digit character must be valid. Next...
+       * * See if the user has typed or started to type a day
+       * * Check the second non-digit character for validity:
        */
       /*
-       * when checking the position of the second non-digit acharacter for validity, the app
+       * when checking the position of the second non-digit character for validity, the app
        * must take into account whether the month was a single or double-digit value as that will affect
        * which positions are valid for the second non-digit character
        */
-      let monthBumper: number = 1;
+      
+      // has the user started to enter a day?
+      let dayAsNum: number;
       let dayBumper: number = 1;
-      if(monthIsSingleDigit) monthBumper = 0;
-      // We expect the user to be consistent in using either "/" or "-" as a delimiter
-      if(matches[1][0] === matches[0][0]) {
-        // If the character is not in a valid position
-        if(matches[1].index === 3 + monthBumper) {
-          // the day is a single digit
-          dayBumper = 0;
-        } else if (matches[1].index === 4 + monthBumper) {
-          dayBumper = 1;
+      if(restoreHeight.length > matches[0].index + 1) {
+        // Is the day a valid number between 1 and 32?
+        // If the day is a two-or-more-digit value....
+        if(restoreHeight.length > matches[0].index + 2) {
+          dayAsNum = parseInt(restoreHeight.slice(2 + monthBumper, 4 + monthBumper), 10);
+          if(dayAsNum === 0 || dayAsNum > 31){
+            // invalid day value
+            console.log("Day must be a value between 1 and 31");
+            return false;
+          }
         } else {
-          // The character is not in a valid position
+          dayBumper = 0;
+        }
+      }
+      // Is there a second delimiter? 
+      if(matches.length === 2) {
+        // We expect the user to be consistent in using either "/" or "-" as a delimiter
+        if(!(matches[1][0] === matches[0][0])) {
+          console.log("The second delimiter is either an invalid delimiter or is not consistent with the first delimiter");
           return false;
         }
+      // Is the user starting to type a day longer than 2 digits?
+      } else if(restoreHeight.length > 4 + monthBumper) {
+        //The user attempted to type a day with more than two digits
+        console.log("Month cannot be longer than two digits");
+        return false; 
       }
       
       //Finally, make sure the year (or portion of it entered) is no more than four digits
-      
+      // if the user has entered or started to enter a year:
+      if(restoreHeight.length > (8 + monthBumper + dayBumper)){
+        //The year has more than four digits and is therefore invalid
+        console.log("Invalid year");
+        return false;
+      }
       
     }
-    
+    console.log("Valid date entered (so far)");
     return true;
   }
   
@@ -539,7 +567,7 @@ export default function App(){
          />
          <div className = "small_spacer"></div>
          <DepositViewerTextEntryField
-           validateEntry = {validateRestoreHeight}
+           validateEntry = {validateRestoreHeightPattern}
            defaultValue = "Enter restore height or date (yyyy-mm-dd)"
          />
          <div className = "small_spacer"></div>
