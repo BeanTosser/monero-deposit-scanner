@@ -324,8 +324,85 @@ export default function App(){
    * and then for the date, doing pattern matching validation on every keystroke and 
    * complete validation on focus out, showing red and disabling the button if invalid 
    */
-   const validateRestoreHeight = function(restoreHeight: string): boolean {
+   
+   /*
+    * this is the first of two functions for validating restore height.
+    * this is the "lite" version; it only checks that the entered eight matches a pattern:
+    * "#...#" or "##/##/####"
+    * and will turn the text box red if it does not
+    * This is done in order not to indicate invalid input when the user has started to enter
+    * BUT NOT FINISHED ENTERING a valid restore height.
+    */
+   const validateRestoreHeightPattern = function(restoreHeight: string): boolean {
     console.log("Validating restore height");
+    
+    // Check to see if the entered height contains non-digit characters
+    const nonDigitRegex = new RegExp('[^0-9]');
+    const validNonDigitRegex = new RegExp('(/\|-)');
+    
+    let monthIsSingleDigit: boolean = false;
+    
+    let matches: RegExpMatchArray[] = [...restoreHeight.matchAll(nonDigitRegex)];
+
+    // If there ARE any matches...
+    if (matches.length > 0) {
+      /*
+       * A valid date, even incompletely typed, will DEFINITELY meet two requirements:
+       * 1. It will be no longer than 10 characters
+       * 2. It will have no more than two non-digit characters
+       */
+      if(restoreHeight.length > 10 || matches.length > 2) {
+        return false;
+      }
+      
+      /*
+       * The first non-digit character should either be a "/" or a "-" and should only
+       * occur at element 1 (if single-digit month) or two (if double-digit month)
+       */ 
+      if(validNonDigitRegex.test(matches[0][0])) {
+        if(matches[0].index === 1) {
+          monthIsSingleDigit = true;
+        } else if (matches[0].index === 2) {
+          // Verify that the month string as a number is <= 12
+          if(parseInt(restoreHeight.slice(0,2), 10) <= 12) {
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+      
+      /*
+       * The first non-digit character must be valid. Check the second:
+       */
+      /*
+       * when checking the position of the second non-digit acharacter for validity, the app
+       * must take into account whether the month was a single or double-digit value as that will affect
+       * which positions are valid for the second non-digit character
+       */
+      let monthBumper: number = 1;
+      let dayBumper: number = 1;
+      if(monthIsSingleDigit) monthBumper = 0;
+      // We expect the user to be consistent in using either "/" or "-" as a delimiter
+      if(matches[1][0] === matches[0][0]) {
+        // If the character is not in a valid position
+        if(matches[1].index === 3 + monthBumper) {
+          // the day is a single digit
+          dayBumper = 0;
+        } else if (matches[1].index === 4 + monthBumper) {
+          dayBumper = 1;
+        } else {
+          // The character is not in a valid position
+          return false;
+        }
+      }
+      
+      //Finally, make sure the year (or portion of it entered) is no more than four digits
+      
+      
+    }
+    
     return true;
   }
   
