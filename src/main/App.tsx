@@ -25,7 +25,7 @@ import TitleBar from "./Components/TitleBar";
 //import ProgressBar from "./Components/ProgressBar";
 import TransactionTable from "./Components/TransactionTable";
 import { Transaction } from "./GlobalTypes";
-import NetworkSelector from "./Components/NetworkSelector/NetworkSelector.js";
+import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.js";
 
 // Load the images/animations that can be displayed on the button
 import loadingAnimation from "./img/loadingAnimation.gif";
@@ -130,13 +130,6 @@ export default function App() {
   */
   const daemonRpc = useRef<MoneroDaemonRpc | null>(null);
   
-  type NetworkConnection = {
-    address: number,
-    status: number
-  }
-  
-  const nodes = useRef<NetworkConnection[]>([]);
-  
   const WALLET_INFO = {
     password: "Random password",
     networkType: "stagenet",
@@ -147,10 +140,6 @@ export default function App() {
   
   // "initialize" the functional component. useEffect runs before the first render
   useEffect(function () {
-    console.log("Running useEffect");
-    
-    console.log("Nodes after init: " + nodes.current);
-    
     try {
     rpcConnection = new MoneroRpcConnection({
       uri: NODE_ADDRESS,
@@ -886,15 +875,7 @@ export default function App() {
   // 
   // 
   //
-  if(nodes.current.length === 0){
-    // Initialize nodes list
-    // (for now, this is just a dummy list for UI testing)
-    nodes.current = [];
-    for(let i = 0; i < 12; i++){
-      nodes.current.push({address: i, status: 0});
-    }
-  } 
-  console.log("nodes!!!: " + nodes.current);
+
   return (
     <div id = "app_container">
       <button
@@ -944,7 +925,7 @@ export default function App() {
         <div className="small_spacer"></div>
         {buttonElement}
         <div className="small_spacer"></div>
-        <NetworkSelector nodes = {nodes.current}/>
+        <ConnectionManager />
         <div className="small_spacer"></div>
         <TransactionTable transactions={transactionList} />
         <div className="large_spacer"></div>

@@ -1,11 +1,46 @@
-import React, {useState}from 'react';
-import "./NetworkSelector.css";
+import React, {useState, useRef}from 'react';
+import "./ConnectionManager.css";
 import ReloadButtonImage from './reload.svg';
 import CloseButtonImage from './close.svg';
 import AddNodeButtonImage from './add_node.svg';
+
+const DEFAULT_NODES = [
+  {
+    address: "https://node.melo.tools:18081",
+    status: 1
+  },
+  {
+    address: "https://moneroworld.com:18081",
+    status: 1
+  },
+  {
+    address: "https://youshouldrunyourownnode.com:18081",
+    status: 1
+  },
+  {
+    address: "https://localhost:18081",
+    status: 1
+  },
+]
+
 export default function(props) {
   
+  /*
+   * Refresh checks the status of each node and updates its "button" on the list
+   * to reflect that status.
+   *
+   * Refresh runs when:
+   * 1. the user clicks the refresh button
+   * 2. the app starts
+   * 3. the user opens the network selector menu
+   */
+  const refresh = function(){
+      
+  }
+  
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  
+  const nodes = useRef(DEFAULT_NODES.slice());
   
   const onHeaderClick = function(){
     if(!menuIsOpen) {
@@ -18,7 +53,7 @@ export default function(props) {
   }
   
   // Create an array of NetworkSelectorItems from the node list
-  let selectorItems = props.nodes.map(function(item, index){
+  let selectorItems = nodes.current.map(function(item, index){
     return(
       <NetworkSelectorItem 
         networkStatus = {item.status}
