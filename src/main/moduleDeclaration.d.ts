@@ -96,6 +96,12 @@ declare module 'monero-javascript' {
   declare class MoneroOutputWallet {
     getTx(): MoneroTxWallet;
   }
+  
+  declare class MoneroNetworkType {
+    MAINNET: number;
+    STAGENET: number;
+    TESTNET: number;
+  }
  
   //function BigInteger(n: number): Uint8Array;
   

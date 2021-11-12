@@ -25,6 +25,7 @@ import TitleBar from "./Components/TitleBar";
 //import ProgressBar from "./Components/ProgressBar";
 import TransactionTable from "./Components/TransactionTable";
 import { Transaction } from "./GlobalTypes";
+import NetworkSelector from "./Components/NetworkSelector.js";
 import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.js";
 
 // Load the images/animations that can be displayed on the button
@@ -49,10 +50,15 @@ const MoneroWalletListener = monerojs.MoneroWalletListener;
 
 type MoneroTxWallet = monerojsExplicitImport.MoneroTxWallet;
 type MoneroOutputWallet = monerojsExplicitImport.MoneroOutputWallet;
+
+type MoneroNetworkType = monerojsExplicitImport.MoneroNetworkType;
 const MoneroNetworkType = monerojs.MoneroNetworkType;
+
 const BigInteger = monerojs.BigInteger;
+
 const MoneroDaemonRpc = monerojsExplicitImport.MoneroDaemonRpc;
 type MoneroDaemonRpc = monerojsExplicitImport.MoneroDaemonRpc;
+
 const MoneroRpcConnection = monerojsExplicitImport.MoneroRpcConnection;
 type MoneroRpcConnection = monerojsExplicitImport.MoneroRpcConnection;
 
@@ -69,9 +75,9 @@ let rpcConnection: MoneroRpcConnection;
 
 export default function App() {
 
-  const TEST_WALLET_ADDRESS: string =
+  const STAGENET_TEST_WALLET_ADDRESS: string =
     "58XaBA1vZWfL6ZiWXiAAuGGaBCrdz7pjK8xpQdPGMz1APj5vUnPjWJ34pvDj4p9zJqCr2ZXKvsySyEQFw9nBnAdLNrXuKDe";
-  const TEST_WALLET_KEY: string =
+  const STAGENET_TEST_WALLET_KEY: string =
     "ac8f4900cd7a3cc6fcdbb75f737da7dea41e243822e8c61e800fabd774b29d06";
 
   const PAGE_BOX_WIDTH = "1024px";
@@ -122,6 +128,7 @@ export default function App() {
   const txHashes = useRef([] as string[]);
   const wallet = useRef<MoneroWalletFull | null>(null);
   
+  const networkType = useRef<MoneroNetworkType>(MoneroNetworkType.STAGENET);
   /*
     uri: string,
   username?: string,
@@ -829,8 +836,8 @@ export default function App() {
       validateViewKey("");
     } else {
       setUseOverrideWallet(true);
-      validateAddress(TEST_WALLET_ADDRESS);
-      validateViewKey(TEST_WALLET_KEY);
+      validateAddress(STAGENET_TEST_WALLET_ADDRESS);
+      validateViewKey(STAGENET_TEST_WALLET_KEY);
     }
   };
 
@@ -875,6 +882,10 @@ export default function App() {
   // 
   // 
   //
+  
+  const setNetworkType = function(type: MoneroNetworkType) {
+    
+  }
 
   return (
     <div id = "app_container">
@@ -907,14 +918,14 @@ export default function App() {
           validateEntry={validateAddress}
           notifyParentOfChange={checkIfAllInputsAreValid}
           defaultValue="Enter wallet's primary address"
-          debugOverride={useOverrideWallet ? TEST_WALLET_ADDRESS : undefined}
+          debugOverride={useOverrideWallet ? STAGENET_TEST_WALLET_ADDRESS : undefined}
         />
         <div className="small_spacer"></div>
         <DepositViewerTextEntryField
           validateEntry={validateViewKey}
           notifyParentOfChange={checkIfAllInputsAreValid}
           defaultValue="Enter the wallet's view key"
-          debugOverride={useOverrideWallet ? TEST_WALLET_KEY : undefined}
+          debugOverride={useOverrideWallet ? STAGENET_TEST_WALLET_KEY : undefined}
         />
         <div className="small_spacer"></div>
         <DepositViewerTextEntryField
@@ -924,6 +935,8 @@ export default function App() {
         />
         <div className="small_spacer"></div>
         {buttonElement}
+        <div className="small_spacer"></div>
+        <NetworkSelector setNetworkType = {setNetworkType}/>
         <div className="small_spacer"></div>
         <ConnectionManager />
         <div className="small_spacer"></div>

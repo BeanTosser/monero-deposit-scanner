@@ -1,3 +1,10 @@
+/*
+ * ConnectionManager
+ *
+ * This is a React component that serves as a graphical interface for the monero-javascript ConnectionManager class.
+ *
+ */
+
 import React, {useState, useRef}from 'react';
 import "./ConnectionManager.css";
 import ReloadButtonImage from './reload.svg';

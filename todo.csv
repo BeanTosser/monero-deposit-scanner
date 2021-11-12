@@ -1,7 +1,6 @@
-PRIORITY,STYLE,FUNCTION,Network selector
-HIGH,* stresstester style button (click colors etc),* convert all CSS units to relative units,“Select node” header
-,* Increase H1 font size,,“add node” button
-,* fix indents in app.js render/return,,functional connection indicators
-LOW,* Change date format to yyyy-mm-dd,,Disable all non-selector functionality while selector menu open
-,,,disable scrolling of main page while menu open
-,,,Fix blackout_box rendering halfway down window
+PRIORITY,STYLE,FUNCTION,Connection Manager,Network Selector
+HIGH,* stresstester style button (click colors etc),* convert all CSS units to relative units,,Need to specify epoch dates for All three networks – in order to verify validity of entered restore height dates
+,* Increase H1 font size,,“add node” button,Neet to find a suitable public node to use a default for all three networks
+,* fix indents in app.js render/return,,functional connection indicators,Switch to appropriate default node with network switch
+LOW,* Change date format to yyyy-mm-dd,,,
+,,,disable scrolling of main page while menu open,
