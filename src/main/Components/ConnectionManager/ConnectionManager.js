@@ -47,8 +47,6 @@ export default function(props) {
   
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   
-  const nodes = useRef(DEFAULT_NODES.slice());
-  
   const onHeaderClick = function(){
     if(!menuIsOpen) {
       setMenuIsOpen(true);
@@ -60,7 +58,7 @@ export default function(props) {
   }
   
   // Create an array of NetworkSelectorItems from the node list
-  let selectorItems = nodes.current.map(function(item, index){
+  let selectorItems = props.nodes.map(function(item, index){
     return(
       <NetworkSelectorItem 
         networkStatus = {item.status}

@@ -25,7 +25,7 @@ import TitleBar from "./Components/TitleBar";
 //import ProgressBar from "./Components/ProgressBar";
 import TransactionTable from "./Components/TransactionTable";
 import { Transaction } from "./GlobalTypes";
-import NetworkSelector from "./Components/NetworkSelector.js";
+import NetworkSelector from "./Components/NetworkSelector/NetworkSelector.js";
 import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.js";
 
 // Load the images/animations that can be displayed on the button

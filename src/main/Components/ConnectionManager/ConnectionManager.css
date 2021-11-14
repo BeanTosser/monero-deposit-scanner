@@ -5,7 +5,7 @@
 	--header-color: #1c7b77;
 }
 
-.network_selector_item {
+.connection_manager_item {
 	width: var(--network-selector-item-width);
 	height: var(--network-selector-item-height);
 	background-color: white;
@@ -17,21 +17,21 @@
 	visibility: hidden;
 }
 
-.network_selector_item.network_selector_header{
+.connection_manager_item.connection_manager_header{
 	background-color: var(--header-color);
 	color: white;
 	z-index:5;
 	width: var(--item-width);
 }
 
-.network_selector_items_container {
+.connection_manager_items_container {
 	overflow-y: auto;
 	max-height: calc(var(--network-selector-item-height) * var(--max-num-selector-items));
 	display: inline-block;
 	height: auto;
 }
 
-.network_selector {
+.connection_manager {
 	height: auto;
 	max-height: calc(var(--network-selector-item-height) * (var(--max-num-selector-items)-1));
 	position: relative;

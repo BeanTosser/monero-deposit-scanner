@@ -20,6 +20,7 @@ import MoneroNetworkType from "monero-javascript"
 export default function(props) {
   
   const handleSelect = function(event) {
+    console.log("You chose the network type: " + event.target.value);
     switch(event.target.value){
       case "mainnet":
         props.setNetworkType(MoneroNetworkType.MAINNET);
