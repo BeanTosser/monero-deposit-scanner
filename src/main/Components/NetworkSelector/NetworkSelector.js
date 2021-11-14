@@ -19,6 +19,12 @@ import MoneroNetworkType from "monero-javascript"
 
 export default function(props) {
   
+  /*
+   * props:
+   * networkTypeFlags
+   * setNetworkType
+   */ 
+  
   const handleSelect = function(event) {
     console.log("You chose the network type: " + event.target.value);
     switch(event.target.value){
@@ -36,6 +42,23 @@ export default function(props) {
     }
   }
   
+  // Sanity check networkTypeFlags value - there must be at least two and no more than three available networks
+  if(networkTypeFlags < 2 || networkTypeFlags > 7) {
+    throw("The value of networkTypeFlags is invalid.");
+  }
+  
+  let availableJsxOptions = [];
+  
+  if(0b100 & props.networkTypeFlags) {
+    availableJsxOptions.push(<option value="mainnet">mainnet</option>)
+  } 
+  if(0b010 & props.networkTypeFlags) {
+    availableJsxOptions.push(<option value="stagenet">stagenet</option>)
+  }
+  if(0b001 & props.networkTypeFlags) {
+    availableJsxOptions.push(<option value="testnet">testnet</option>)
+  }
+  
   return (
     <>
       <label for="network-select">Choose a Monero network</label>
@@ -44,9 +67,7 @@ export default function(props) {
         name = "network-select" 
         className = "network-select"
         onChange = {handleSelect}>
-          <option value="mainnet">mainnet</option>
-          <option value="stagenet">stagenet</option>
-          <option value="testnet">testnet</option>
+          {availableNetworkOptions}
       </select>
     </>
   )

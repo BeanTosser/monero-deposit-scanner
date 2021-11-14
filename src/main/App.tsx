@@ -66,11 +66,13 @@ type MoneroRpcConnection = monerojsExplicitImport.MoneroRpcConnection;
 // Unfortunately, defining as a ref and attempting to use that ref with
 // .current results in a MoneroError stating that "current" is not a 
 // valid field of MoneroRpcConnection
-const NODE_ADDRESS = "http://127.0.0.1:80/";
+const STAGENET_NODE_ADDRESS = "http://127.0.0.1:80/";
+const MAINNET_NODE_ADDRESS = "https://node.melo.tools:18081";
+const TESTNET_NODE_ADDRESS = "207.154.218.113:28080";
 const USERNAME = "username";
 const PASSWORD = "password";
 const WALLET_SYNC_PERIOD = 5000;
-//const NODE_ADDRESS = "http://127.0.0.1:80/";
+//const STAGENET_NODE_ADDRESS = "http://127.0.0.1:80/";
 let rpcConnection: MoneroRpcConnection;
 
 export default function App() {
@@ -103,7 +105,7 @@ export default function App() {
   const [viewkey, setViewKey] = useState<string>("");
   const [restoreHeight, setRestoreHeight] = useState<string>("0");
   const [dateConversionWallet, setDateConversionWallet] = useState<MoneroWalletFull | null>(null);
-  const [walletCreationHasStarted, setWalletCreationHasStarted] = useState<boolean>(false);
+  //const [walletCreationHasStarted, setWalletCreationHasStarted] = useState<boolean>(false);
   /*
    * Initialize to be ACTIVE - it will only deactivate if:
    *  1. The user entered an invalid or incomplete address or viewkey or improperly-formatted restore date)
@@ -122,9 +124,7 @@ export default function App() {
   // Persistant variables
   const fullModuleIsLoaded = useRef<boolean>(false);
   const enteredHeightIsDate = useRef<boolean>(false);
-  const dateConversionWalletPromise = useRef<Promise<MoneroWalletFull> | null>(
-    null
-  );
+  const dateConversionWalletPromise = useRef<Promise<MoneroWalletFull> | null>(null);
   const txHashes = useRef([] as string[]);
   const wallet = useRef<MoneroWalletFull | null>(null);
   
@@ -144,50 +144,55 @@ export default function App() {
   };
   const [useOverrideWallet, setUseOverrideWallet] = useState<boolean>(false);
   
+  const setRpcConnection: (uri: string, username: string, password: string) => void = async function(uri, username, password) {
+    try {
+      rpcConnection = new MoneroRpcConnection({
+        uri: uri,
+        username: username,
+        password: password
+      });
+    } catch(e) {
+      throw("failed to create RPC connection: " + e);
+    }   
+    
+    // Create a daemon connection using the MoneroRpcConnection
+    try {
+      daemonRpc.current = await monerojs.connectToDaemonRpc({server: rpcConnection});
+    } catch(e) {
+      throw("Daemon creation failed: " + e);
+    }
+    
+    console.log("New rpc connection: " + rpcConnection);
+    console.log("New DaemonRpc: " + daemonRpc.current);
+  }
   
   // "initialize" the functional component. useEffect runs before the first render
-  useEffect(function () {
-    try {
-    rpcConnection = new MoneroRpcConnection({
-      uri: NODE_ADDRESS,
-      username: USERNAME,
-      password: PASSWORD
-    });
-    } catch(e) {
-      console.log("failed to create RPC connection: " + e);
-    }
-    async function loadPreRequisites() {
-      // Load full wallet module
-      try {
-        await LibraryUtils.loadFullModule();
-      } catch (e) {
-        
-        return;
-      }
-      fullModuleIsLoaded.current = true;
-      
-      // Create a daemon connection using the MoneroRpcConnection
-      try {
-        daemonRpc.current = await monerojs.connectToDaemonRpc({server: rpcConnection});
-      } catch(e) {
-        console.log("Daemon creation failed: " + e);
-      }
+  useEffect(
+    function () {
+      setRpcConnection(STAGENET_NODE_ADDRESS, USERNAME, PASSWORD);
+      async function loadPreRequisites() {
+        // Load full wallet module
+        try {
+          await LibraryUtils.loadFullModule();
+        } catch (e) {
+          return;
+        }
+        fullModuleIsLoaded.current = true;
 
-      /*
-       * Create a wallet to be used to convert dates to restore heights
-       * This is necessary because MoneroWalletFull's conversion function is
-       * an instance member function rather than a static class function
-       */
-      try {
-        createDateConversionWallet();
-      } catch (e) {
-        
-        return;
+        /*
+         * Create a wallet to be used to convert dates to restore heights
+         * This is necessary because MoneroWalletFull's conversion function is
+         * an instance member function rather than a static class function
+         */
+        try {
+          createDateConversionWallet();
+        } catch (e) {      
+          return;
+        }
       }
-    }
-
-    loadPreRequisites();
-  }, []);
+      loadPreRequisites();
+    }, 
+  []);
 
   const addTransaction: (transaction: MoneroTxWallet) => void = async function (transaction) {
     /*
@@ -884,7 +889,18 @@ export default function App() {
   //
   
   const setNetworkType = function(type: MoneroNetworkType) {
-    
+    switch(type) {
+    case MoneroNetworkType.MAINNET:
+      setRpcConnection(MAINNET_NODE_ADDRESS, USERNAME, PASSWORD);
+      break;
+    case MoneroNetworkType.STAGENET:
+      setRpcConnection(STAGENET_NODE_ADDRESS, USERNAME, PASSWORD);
+      break;
+    case MoneroNetworkType.TESTNET:
+      setRpcConnection(TESTNET_NODE_ADDRESS, USERNAME, PASSWORD);
+      break;
+    default:
+      throw("Cannot set network type to " + type + "; This is not a valid MoneroNetworkType!");
   }
 
   return (
@@ -936,7 +952,10 @@ export default function App() {
         <div className="small_spacer"></div>
         {buttonElement}
         <div className="small_spacer"></div>
-        <NetworkSelector setNetworkType = {setNetworkType}/>
+        <NetworkSelector 
+          setNetworkType = {setNetworkType}
+          networkTypeFlags = {0b111}
+        />
         <div className="small_spacer"></div>
         <ConnectionManager />
         <div className="small_spacer"></div>
