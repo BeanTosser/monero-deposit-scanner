@@ -5,7 +5,7 @@
  *
  */
 
-import React, {useState, useRef}from 'react';
+import React, {useState}from 'react';
 import "./ConnectionManager.css";
 import ReloadButtonImage from './reload.svg';
 import CloseButtonImage from './close.svg';
@@ -41,9 +41,6 @@ export default function(props) {
    * 2. the app starts
    * 3. the user opens the network selector menu
    */
-  const refresh = function(){
-      
-  }
   
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   
