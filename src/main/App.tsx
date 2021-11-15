@@ -889,18 +889,20 @@ export default function App() {
   //
   
   const setNetworkType = function(type: MoneroNetworkType) {
+    console.log("setNetworkType in app.js received the following network type: " + type);
     switch(type) {
-    case MoneroNetworkType.MAINNET:
-      setRpcConnection(MAINNET_NODE_ADDRESS, USERNAME, PASSWORD);
-      break;
-    case MoneroNetworkType.STAGENET:
-      setRpcConnection(STAGENET_NODE_ADDRESS, USERNAME, PASSWORD);
-      break;
-    case MoneroNetworkType.TESTNET:
-      setRpcConnection(TESTNET_NODE_ADDRESS, USERNAME, PASSWORD);
-      break;
-    default:
-      throw("Cannot set network type to " + type + "; This is not a valid MoneroNetworkType!");
+      case MoneroNetworkType.MAINNET:
+        setRpcConnection(MAINNET_NODE_ADDRESS, USERNAME, PASSWORD);
+        break;
+      case MoneroNetworkType.STAGENET:
+        setRpcConnection(STAGENET_NODE_ADDRESS, USERNAME, PASSWORD);
+        break;
+      case MoneroNetworkType.TESTNET:
+        setRpcConnection(TESTNET_NODE_ADDRESS, USERNAME, PASSWORD);
+        break;
+      default:
+        throw("Cannot set network type to " + type + "; This is not a valid MoneroNetworkType!");
+    }
   }
 
   return (
@@ -954,10 +956,8 @@ export default function App() {
         <div className="small_spacer"></div>
         <NetworkSelector 
           setNetworkType = {setNetworkType}
-          networkTypeFlags = {0b111}
+          networkTypeFlags = {110}
         />
-        <div className="small_spacer"></div>
-        <ConnectionManager />
         <div className="small_spacer"></div>
         <TransactionTable transactions={transactionList} />
         <div className="large_spacer"></div>

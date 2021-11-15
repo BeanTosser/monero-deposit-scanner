@@ -14,36 +14,39 @@
  *
  */
  
-import React from 'react';
+import React, { useRef } from 'react';
 import MoneroNetworkType from "monero-javascript"
 
 export default function(props) {
+  console.log("Rendering networkselector");
   
   /*
    * props:
    * networkTypeFlags
    * setNetworkType
    */ 
+   
+  const availableNetworkOptions = useRef(null);
   
   const handleSelect = function(event) {
     console.log("You chose the network type: " + event.target.value);
-    switch(event.target.value){
-      case "mainnet":
-        props.setNetworkType(MoneroNetworkType.MAINNET);
-        break;
-      case "stagenet":
-        props.setNetworkType(MoneroNetworkType.STAGENET);
-        break;
-      case "testnet":
-        props.setNetworkType(MoneroNetworkType.TESTNET);
-        break;
-      default:
-        thow("Something went wrong with network selection");
+
+    if (event.target.value === "mainnet") {
+      props.setNetworkType(MoneroNetworkType.MAINNET);
+      console.log("set network type to " + MoneroNetworkType.MAINNET);
+    } else if (event.target.value === "stagenet") {
+      props.setNetworkType(MoneroNetworkType.STAGENET);
+      console.log("set network type to " + MoneroNetworkType.STAGENET);
+    } else if (event.target.value === "testnet") {
+      props.setNetworkType(MoneroNetworkType.TESTNET);
+    } else {
+      thow("Something went wrong with network selection");
     }
+
   }
   
   // Sanity check networkTypeFlags value - there must be at least two and no more than three available networks
-  if(networkTypeFlags < 2 || networkTypeFlags > 7) {
+  if(props.networkTypeFlags < 2 || props.networkTypeFlags > 7) {
     throw("The value of networkTypeFlags is invalid.");
   }
   
@@ -59,6 +62,8 @@ export default function(props) {
     availableJsxOptions.push(<option value="testnet">testnet</option>)
   }
   
+  availableNetworkOptions.current = availableJsxOptions;
+  
   return (
     <>
       <label for="network-select">Choose a Monero network</label>
@@ -67,7 +72,7 @@ export default function(props) {
         name = "network-select" 
         className = "network-select"
         onChange = {handleSelect}>
-          {availableNetworkOptions}
+          {availableNetworkOptions.current}
       </select>
     </>
   )
