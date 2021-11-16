@@ -1,5 +1,6 @@
 import React from 'react';
-import MoneroNetworkType from "monero-javascript";
+const monerojs = require("monero-javascript");
+const MoneroNetworkType = monerojs.MoneroNetworkType;
 
 export interface NetworkSelectorProps {
   networkTypeFlags: number,

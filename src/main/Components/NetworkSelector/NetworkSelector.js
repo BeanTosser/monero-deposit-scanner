@@ -15,7 +15,8 @@
  */
  
 import React, { useRef } from 'react';
-import MoneroNetworkType from "monero-javascript"
+const monerojs = require("monero-javascript");
+const MoneroNetworkType = monerojs.MoneroNetworkType;
 
 export default function(props) {
   console.log("Rendering networkselector");
@@ -32,11 +33,11 @@ export default function(props) {
     console.log("You chose the network type: " + event.target.value);
 
     if (event.target.value === "mainnet") {
-      props.setNetworkType(MoneroNetworkType.MAINNET);
       console.log("set network type to " + MoneroNetworkType.MAINNET);
+      props.setNetworkType(MoneroNetworkType.MAINNET);
     } else if (event.target.value === "stagenet") {
-      props.setNetworkType(MoneroNetworkType.STAGENET);
       console.log("set network type to " + MoneroNetworkType.STAGENET);
+      props.setNetworkType(MoneroNetworkType.STAGENET);
     } else if (event.target.value === "testnet") {
       props.setNetworkType(MoneroNetworkType.TESTNET);
     } else {
@@ -47,7 +48,7 @@ export default function(props) {
   
   // Sanity check networkTypeFlags value - there must be at least two and no more than three available networks
   if(props.networkTypeFlags < 2 || props.networkTypeFlags > 7) {
-    throw("The value of networkTypeFlags is invalid.");
+    throw(props.networkTypeFlags + " is not a valid networkTypeFlag!");
   }
   
   let availableJsxOptions = [];
@@ -66,7 +67,7 @@ export default function(props) {
   
   return (
     <>
-      <label for="network-select">Choose a Monero network</label>
+      <label htmlFor="network-select">Choose a Monero network</label>
 
       <select 
         name = "network-select" 
