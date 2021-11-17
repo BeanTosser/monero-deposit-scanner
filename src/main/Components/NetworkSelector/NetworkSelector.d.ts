@@ -3,7 +3,7 @@ const monerojs = require("monero-javascript");
 const MoneroNetworkType = monerojs.MoneroNetworkType;
 
 export interface NetworkSelectorProps {
-  networkTypeFlags: number,
+  networkTypes?: number[],
   setNetworkType: (networkType: MoneroNetworkType) => void
 }
 

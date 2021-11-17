@@ -23,7 +23,7 @@ export default function(props) {
   
   /*
    * props:
-   * networkTypeFlags
+   * networkTypes
    * setNetworkType
    */ 
    
@@ -46,24 +46,58 @@ export default function(props) {
 
   }
   
-  // Sanity check networkTypeFlags value - there must be at least two and no more than three available networks
-  if(props.networkTypeFlags < 2 || props.networkTypeFlags > 7) {
-    throw(props.networkTypeFlags + " is not a valid networkTypeFlag!");
+  // Sanity check networkTypes
+  // There must be at least two and no more than three available networks
+  if(props.networkTypes.length >= 2 && props.networkTypes.length <= 3) {
+    // Keep track of selected network types to check for invalid repeats
+    let chosenNetworks = [];
+    availableNetworkOptions.current = props.networkTypes.map(networkTypeInteger => {
+      //Make sure the value is not a repeat
+      if(chosenNetworks.indexOf(networkTypeInteger) === -1){
+        // The value is valid. add it to the available network types
+        chosenNetworks.push(networkTypeInteger);
+        switch(networkTypeInteger) {
+          case 0:
+            console.log("adding mainnet");
+            return (
+              <option
+                value = "mainnet"
+                key = "mainnet"
+              >
+                mainnet
+              </option>
+            )
+          case 1:
+          console.log("Adding stagenet");
+            return (
+              <option
+                value = "stagenet"
+                key = "stagenet"
+              >
+                stagenet
+              </option>
+            )
+          case 2:
+            console.log("Adding testnet");
+            return (
+              <option
+                value = "testnet"
+                key = "testnet"
+              >
+                testnet
+              </option>
+            )
+          default:
+            throw("networkTypes values must be between 0 and 2");
+        }
+      } else {
+          throw("The networkTypes array must not contain duplicate values");
+      }
+
+    })
+  } else {
+    throw("networkTypes must have exactly two or three elements");
   }
-  
-  let availableJsxOptions = [];
-  
-  if(0b100 & props.networkTypeFlags) {
-    availableJsxOptions.push(<option value="mainnet">mainnet</option>)
-  } 
-  if(0b010 & props.networkTypeFlags) {
-    availableJsxOptions.push(<option value="stagenet">stagenet</option>)
-  }
-  if(0b001 & props.networkTypeFlags) {
-    availableJsxOptions.push(<option value="testnet">testnet</option>)
-  }
-  
-  availableNetworkOptions.current = availableJsxOptions;
   
   return (
     <>

@@ -956,7 +956,7 @@ export default function App() {
         <div className="small_spacer"></div>
         <NetworkSelector 
           setNetworkType = {setNetworkType}
-          networkTypeFlags = {0b110}
+          networkTypes = {[0,1]}
         />
         <div className="small_spacer"></div>
         <TransactionTable transactions={transactionList} />
