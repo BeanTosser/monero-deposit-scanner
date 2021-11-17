@@ -46,57 +46,82 @@ export default function(props) {
 
   }
   
-  // Sanity check networkTypes
-  // There must be at least two and no more than three available networks
-  if(props.networkTypes.length >= 2 && props.networkTypes.length <= 3) {
-    // Keep track of selected network types to check for invalid repeats
-    let chosenNetworks = [];
-    availableNetworkOptions.current = props.networkTypes.map(networkTypeInteger => {
-      //Make sure the value is not a repeat
-      if(chosenNetworks.indexOf(networkTypeInteger) === -1){
-        // The value is valid. add it to the available network types
-        chosenNetworks.push(networkTypeInteger);
-        switch(networkTypeInteger) {
-          case 0:
-            console.log("adding mainnet");
-            return (
+  // if networkTypes prop is not supplied, default to allowing a choice from among all three networks
+  if(props.networkTypes === undefined) {
+    //default to all three networks
+    availableNetworkOptions.current = [
               <option
                 value = "mainnet"
                 key = "mainnet"
               >
                 mainnet
-              </option>
-            )
-          case 1:
-          console.log("Adding stagenet");
-            return (
+              </option>,
               <option
                 value = "stagenet"
                 key = "stagenet"
               >
                 stagenet
-              </option>
-            )
-          case 2:
-            console.log("Adding testnet");
-            return (
+              </option>,
               <option
                 value = "testnet"
                 key = "testnet"
               >
                 testnet
               </option>
-            )
-          default:
-            throw("networkTypes values must be between 0 and 2");
-        }
-      } else {
-          throw("The networkTypes array must not contain duplicate values");
-      }
-
-    })
+    ]
   } else {
-    throw("networkTypes must have exactly two or three elements");
+    // Sanity check networkTypes
+    // There must be at least two and no more than three available networks
+    if(props.networkTypes.length >= 2 && props.networkTypes.length <= 3) {
+    // Keep track of selected network types to check for invalid repeats
+      let chosenNetworks = [];
+      availableNetworkOptions.current = props.networkTypes.map(networkTypeInteger => {
+        //Make sure the value is not a repeat
+        if(chosenNetworks.indexOf(networkTypeInteger) === -1){
+          // The value is valid. add it to the available network types
+          chosenNetworks.push(networkTypeInteger);
+          switch(networkTypeInteger) {
+            case 0:
+              console.log("adding mainnet");
+              return (
+                <option
+                  value = "mainnet"
+                  key = "mainnet"
+                >
+                  mainnet
+                </option>
+              )
+            case 1:
+            console.log("Adding stagenet");
+              return (
+                <option
+                  value = "stagenet"
+                  key = "stagenet"
+                >
+                  stagenet
+                </option>
+              )
+            case 2:
+              console.log("Adding testnet");
+              return (
+                <option
+                  value = "testnet"
+                  key = "testnet"
+                >
+                  testnet
+                </option>
+              )
+            default:
+              throw("networkTypes values must be between 0 and 2");
+          }
+        } else {
+            throw("The networkTypes array must not contain duplicate values");
+        }
+
+      })
+    } else {
+      throw("networkTypes must have exactly two or three elements");
+    }
   }
   
   return (
