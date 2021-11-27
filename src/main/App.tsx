@@ -32,35 +32,37 @@ import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.
 import loadingAnimation from "./img/loadingAnimation.gif";
 import checkmarkImage from "./img/checkmark.png"
 
-const monerojs = require("monero-javascript");
-
 /*
  * The second import of "monero-javascript" is necessary in order to create a
  * type based off of it's child module
  */
-import monerojsExplicitImport from "monero-javascript";
+import monerojs from "monero-javascript";
 
-const LibraryUtils = monerojs.LibraryUtils;
-const MoneroUtils = monerojs.MoneroUtils;
-type MoneroWalletFull = monerojsExplicitImport.MoneroWalletFull;
-//const MoneroRpcConnection = monerojs.MoneroRpcConnection;
+import LibraryUtils from 'monero-javascript';
+import MoneroUtils from 'monero-javascript';
+
+import MoneroWalletFull from 'monero-javascript';
+type MoneroWalletFull = typeof MoneroWalletFull;
+//import MoneroRpcConnection from 'monero-javascript';
 
 //type  MoneroWalletListener = monerojsExplicitImport.MoneroWalletListener;
-const MoneroWalletListener = monerojs.MoneroWalletListener;
+import MoneroWalletListener from 'monero-javascript';
 
-type MoneroTxWallet = monerojsExplicitImport.MoneroTxWallet;
-type MoneroOutputWallet = monerojsExplicitImport.MoneroOutputWallet;
+import MoneroTxWallet from 'monero-javascript';
+type MoneroTxWallet = typeof MoneroTxWallet;
+import MoneroOutputWallet from 'monero-javascript';
+type MoneroOutputWallet = typeof MoneroOutputWallet;
 
-type MoneroNetworkType = monerojsExplicitImport.MoneroNetworkType;
-const MoneroNetworkType = monerojs.MoneroNetworkType;
+import MoneroNetworkType from 'monero-javascript';
+type MoneroNetworkType = typeof MoneroNetworkType;
 
-const BigInteger = monerojs.BigInteger;
+import BigInteger from 'monero-javascript';
 
-const MoneroDaemonRpc = monerojsExplicitImport.MoneroDaemonRpc;
-type MoneroDaemonRpc = monerojsExplicitImport.MoneroDaemonRpc;
+import MoneroDaemonRpc from 'monero-javascript';
+type MoneroDaemonRpc = typeof MoneroDaemonRpc;
 
-const MoneroRpcConnection = monerojsExplicitImport.MoneroRpcConnection;
-type MoneroRpcConnection = monerojsExplicitImport.MoneroRpcConnection;
+import MoneroRpcConnection from 'monero-javascript';
+type MoneroRpcConnection = typeof MoneroRpcConnection;
 
 // We should not be defining this constant outside of the main class!
 // Unfortunately, defining as a ref and attempting to use that ref with
@@ -976,6 +978,7 @@ class walletListener extends MoneroWalletListener {
   syncResolution: number;
   lastIncrement: number;
   walletIsSynchronized: boolean;
+  checkIfAllInputsAreValid: () => void;
 
   constructor(
     setCurrentSyncProgress: (progress: number) => void,
