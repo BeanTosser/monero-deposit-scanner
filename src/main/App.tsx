@@ -314,20 +314,13 @@ export default function App() {
     // At present, getRestoreHeightFromDate() is (erroneously) an instance method; thus, a wallet instance is
     // required to use it.
     
-    let newDateConversionWallet: MoneroWalletFull = await monerojs.createWalletFull(WALLET_INFO);
-    try {
-      // 
-      dateConversionWalletPromise.current = monerojs
-        .createWalletFull(WALLET_INFO)
-        .then(function (resolvedDateWallet: MoneroWalletFull) {
-          setDateConversionWallet(resolvedDateWallet);
-          // Set the "action" button (ie the only button in the app) text, color, and pressability accordingly
-          //checkIfAllInputsAreValid();
-        });
-      // TODO - migrate to promise.then.catch
-    } catch (e) {
+    try{
+      let newDateConversionWallet: MoneroWalletFull = await monerojs.createWalletFull(WALLET_INFO);
+      setDateConversionWallet(newDateConversionWallet);
+    } catch(e: any){
       throw "Date wallet creation failed: " + e;
     }
+
   };
 
   const resetApp = function (): void {
@@ -885,7 +878,7 @@ export default function App() {
   // 
   //
   
-  const setNetworkType = function(type: MoneroNetworkType) {
+  const setNetworkType = function(type: number) {
     console.log("setNetworkType in app.js received the following network type: " + type);
     switch(type) {
       case MoneroNetworkType.MAINNET:

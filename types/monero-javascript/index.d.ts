@@ -66,7 +66,7 @@ declare module 'monero-javascript' {
   
   export module MoneroUtils {
     function validatePrivateViewKey(viewKey: string): void;
-    function isValidAddress(address: string, networkType: MoneroNetworkType): boolean;
+    function isValidAddress(address: string, networkType: number): boolean;
   }
 
   export class MoneroWalletFull{
