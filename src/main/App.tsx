@@ -27,42 +27,35 @@ import TransactionTable from "./Components/TransactionTable";
 import { Transaction } from "./GlobalTypes";
 import NetworkSelector from "./Components/NetworkSelector/NetworkSelector.js";
 import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.js";
-
+import {MoneroWalletFull} from "monero-javascript";
+import {MoneroTxWallet} from "monero-javascript";
 // Load the images/animations that can be displayed on the button
 import loadingAnimation from "./img/loadingAnimation.gif";
 import checkmarkImage from "./img/checkmark.png"
 
-/*
- * The second import of "monero-javascript" is necessary in order to create a
- * type based off of it's child module
- */
 import monerojs from "monero-javascript";
+import {MoneroOutputWallet} from "monero-javascript";
+import {LibraryUtils} from "monero-javascript";
+import {MoneroUtils} from "monero-javascript";
 
-import LibraryUtils from 'monero-javascript';
-import MoneroUtils from 'monero-javascript';
+//import {MoneroRpcConnection} from "monero-javascript";
 
-import MoneroWalletFull from 'monero-javascript';
-type MoneroWalletFull = typeof MoneroWalletFull;
-//import MoneroRpcConnection from 'monero-javascript';
+//
+import {MoneroWalletListener} from "monero-javascript";
 
-//type  MoneroWalletListener = monerojsExplicitImport.MoneroWalletListener;
-import MoneroWalletListener from 'monero-javascript';
 
-import MoneroTxWallet from 'monero-javascript';
-type MoneroTxWallet = typeof MoneroTxWallet;
-import MoneroOutputWallet from 'monero-javascript';
-type MoneroOutputWallet = typeof MoneroOutputWallet;
 
-import MoneroNetworkType from 'monero-javascript';
-type MoneroNetworkType = typeof MoneroNetworkType;
 
-import BigInteger from 'monero-javascript';
 
-import MoneroDaemonRpc from 'monero-javascript';
-type MoneroDaemonRpc = typeof MoneroDaemonRpc;
+import {MoneroNetworkType} from "monero-javascript";
 
-import MoneroRpcConnection from 'monero-javascript';
-type MoneroRpcConnection = typeof MoneroRpcConnection;
+import {BigInteger} from "monero-javascript";
+
+import {MoneroDaemonRpc} from "monero-javascript";
+
+
+import {MoneroRpcConnection} from "monero-javascript";
+
 
 // We should not be defining this constant outside of the main class!
 // Unfortunately, defining as a ref and attempting to use that ref with
@@ -130,7 +123,7 @@ export default function App() {
   const txHashes = useRef([] as string[]);
   const wallet = useRef<MoneroWalletFull | null>(null);
   
-  const networkType = useRef<MoneroNetworkType>(MoneroNetworkType.STAGENET);
+  const networkType = useRef<number>(MoneroNetworkType.STAGENET);
   /*
     uri: string,
   username?: string,
@@ -320,6 +313,8 @@ export default function App() {
     // Create a disposable,random wallet to prepare for the possibility that the user will attempt to restore from a date
     // At present, getRestoreHeightFromDate() is (erroneously) an instance method; thus, a wallet instance is
     // required to use it.
+    
+    let newDateConversionWallet: MoneroWalletFull = await monerojs.createWalletFull(WALLET_INFO);
     try {
       // 
       dateConversionWalletPromise.current = monerojs

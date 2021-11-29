@@ -1,8 +1,7 @@
-
-import fs from 'fs';
-type fs = typeof fs;
-
 declare module 'monero-javascript' {
+  import fs from 'fs';
+  type fs = typeof fs;
+  
   export module LibraryUtils {
     function loadFullModule(): Promise<MoneroWalletFull>;
   }
@@ -27,7 +26,7 @@ declare module 'monero-javascript' {
     server?: MoneroRpcConnection | MoneroRpcConfig,
     proxyToWorker?: boolean,
     fs?: fs
-  }): MoneroWalletFull
+  }): Promise<MoneroWalletFull>
   
   type MoneroRpcConfig = {
     uri: string,
@@ -69,9 +68,7 @@ declare module 'monero-javascript' {
     function validatePrivateViewKey(viewKey: string): void;
     function isValidAddress(address: string, networkType: MoneroNetworkType): boolean;
   }
-  
 
-  
   export class MoneroWalletFull{
     addListener(listener: MoneroWalletListener): Promise<void>;
     sync(listener: any, startHeight: any, allowConcurrentCalls: boolean): Promise<any>;
@@ -101,7 +98,8 @@ declare module 'monero-javascript' {
   //function BigInteger(n: number): Uint8Array;
   
   export class BigInteger {
-    BigInteger(): Uint8Array;
-    BigInteger(n: number): Uint8Array;
+    BigInteger(n?: number): Uint8Array;
   }
+  
+  export function BigInteger(n? : number): u8intArray;
 }
