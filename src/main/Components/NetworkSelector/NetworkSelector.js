@@ -18,7 +18,7 @@ import React, { useRef } from 'react';
 const monerojs = require("monero-javascript");
 const MoneroNetworkType = monerojs.MoneroNetworkType;
 
-export default function(props) {
+export function MoneroNetworkSelector(props) {
   console.log("Rendering networkselector");
   
   /*

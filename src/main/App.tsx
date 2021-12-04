@@ -25,7 +25,7 @@ import TitleBar from "./Components/TitleBar";
 //import ProgressBar from "./Components/ProgressBar";
 import TransactionTable from "./Components/TransactionTable";
 import { Transaction } from "./GlobalTypes";
-import NetworkSelector from "./Components/NetworkSelector/NetworkSelector.js";
+import {MoneroNetworkSelector} from "moneronetworkselector";
 import ConnectionManager from "./Components/ConnectionManager/ConnectionManager.js";
 import {MoneroWalletFull} from "monero-javascript";
 import {MoneroTxWallet} from "monero-javascript";
@@ -944,7 +944,7 @@ export default function App() {
         <div className="small_spacer"></div>
         {buttonElement}
         <div className="small_spacer"></div>
-        <NetworkSelector 
+        <MoneroNetworkSelector 
           setNetworkType = {setNetworkType}
         />
         <div className="small_spacer"></div>
